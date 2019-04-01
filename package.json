@@ -1,0 +1,34 @@
+{
+  "name": "textannotatorapi",
+  "version": "1.0.0",
+  "description": "RESTful API to annotate text from external vocabularies.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hadikariarachch/Text-annonator-a.git"
+  },
+  "keywords": [
+    "Restful",
+    "API",
+    "Annotator"
+  ],
+  "author": "Team A",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hadikariarachch/Text-annonator-a/issues"
+  },
+  "homepage": "https://github.com/hadikariarachch/Text-annonator-a#readme",
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "jquery": "^3.3.1",
+    "jsdom": "^13.2.0",
+    "mongoose": "^5.4.3"
+  }
+}
