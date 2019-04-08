@@ -1,59 +1,63 @@
-var required_json=[];
+/**
+ * This JS file is conncted to the index.html page.
+ * This includes th functions to send AJAX requests for the annnotatorApplication.js API.
+ */
 
-// var ontologyLists = [{"_id": "Adaptor1", "name": "Experimental Factor Ontology"},
-//     {"_id": "Adaptor2", "name": "National Cancer Institute Thesaurus"}];
+var required_json=[]; //declare empty array
 
+//creating a function to load connected ontologies to the GUI
 function loadOntologies(){   
-    alert("print 1afasfasf");
+    
     var ontologyList = new Array();
-            var request = new XMLHttpRequest();
-            alert("print 1");
-            request.open('GET', 'http://localhost:3000/annotatorapp/getontologylist', true);
-            alert("print 2");
-            request.onload = function () {
-                alert("print 3");
-            // Begin accessing JSON data here
-            var data = this.response;
+    var request = new XMLHttpRequest(); //create a xmlhttp request
+    request.open('GET', 'http://localhost:3000/annotatorapp/getontologylist', true); //define as an ALAX request
+    request.onload = function () {
 
-            alert(this.response);
+    // Begin accessing JSON data here
+    var data = this.response; //get the response
 
-            if (request.status >= 200 && request.status < 400) {
+        //if response status ok, then populate ontologyList array
+        if (request.status >= 200 && request.status < 400) {
             data.forEach(ontology => {
             ontologyList.push(ontology.name);
             });
-          } else {
+        } else {
             alert('some error occured');
-          }
-          
         }
+          
+    }
 
-        request.send();
+    request.send(); //send the ALAX request
 
-        $( "#ontologies" ).autocomplete({
-              source: ontologyList
-        });
+    //Jquery for autocomplete dropdown menu with id = 'ontologies'
+    $( "#ontologies" ).autocomplete({
+        source: ontologyList
+    });
             
 };
 
+//creating a function to send AJAX request to getdefinition() in annotatorApplication.js API
 function generateResult(){
         
-    var annotateText=document.getElementById("annotorText").value;
+    var annotateText=document.getElementById("annotorText").value; //get the text value
     console.log(annotateText);
 
-    var selectedOntologies = ["Adaptor1", "Adaptor2"];
+    var selectedOntologies = ["Adaptor1", "Adaptor2"]; //currently hardcoding the selected ontologies
     //var selectedOntologies=document.getElementById("ontologies").value; //get the correct ID array from UI
     
-    var jsonStringOfSelectedOntologies = JSON.stringify(selectedOntologies);
+    var jsonStringOfSelectedOntologies = JSON.stringify(selectedOntologies); //make a JSON string from above 'selectedOntologies'
 
 	console.log(annotateText+" "+jsonStringOfSelectedOntologies);
     
-        var request = new XMLHttpRequest();
+        var request = new XMLHttpRequest(); //create a xmlhttp request
 
-        request.open('GET', 'http://localhost:3000/annotatorapp/getdefinition/:'+ annotateText +'/:'+jsonStringOfSelectedOntologies, true);
+        request.open('GET', 'http://localhost:3000/annotatorapp/getdefinition/:'+ annotateText +'/:'+jsonStringOfSelectedOntologies, true); //define as an ALAX request
         request.onload = function () {
 
         // Begin accessing JSON data here
-        var data = this.response;
+        var data = this.response; //get the response 
+
+        //if response status ok, then call populateResult() function with response data
         if (request.status >= 200 && request.status < 400) {
             populateResult(data);
         } else {
@@ -62,11 +66,11 @@ function generateResult(){
 
         }
 
-        request.send();        
+        request.send(); //send the ALAX request     
 };
 
 
-
+//creating a function to populate the table in index.html page
 function populateResult(responseJsonString){
 required_json = JSON.parse(responseJsonString);
 
@@ -84,10 +88,6 @@ for(var i in required_json){
 	var tbody=document.createElement("tbody");
 	//creates a tr tag
 	var row=document.createElement("tr");
-
-    // var new_tbody = document.createElement('tbody');
-    // //populate_with_new_rows(new_tbody);
-    // tbody.parentNode.replaceChild(new_tbody, tbody);
 
 	for(var i in items){
 		//creates a td tag
@@ -109,7 +109,3 @@ for(var i in required_json){
 	table.appendChild(tbody);
 }
 };
-
-
-//generateResult();  //Direct function calling for testing purposes
-//loadOntologies();  //Direct function calling for testing purposes
