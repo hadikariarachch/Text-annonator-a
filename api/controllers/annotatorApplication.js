@@ -33,17 +33,22 @@ exports.getDefinition = function (req, res) {
     filteredText.forEach(keyword => {
         
         //call dictionary.getDescription() with each words
-        dictionary.getDescription(keyword, selectedOntologies, function (result) {         
+        dictionary.getDescription(keyword, selectedOntologies, function (result , error) {         
 
-                counter++; //increment the flag counter
-                let newObj = JSON.parse(result); //assign the result as a JS object
-                newObj.forEach(element => {
-                    json_response.push(element); //add each result to json_response array
-                });
+                if (error) {
+                    console.log("ERROR : ", error);
+                    res.send(error); //sending the error through callback parameter
+                } else {
+                    counter++; //increment the flag counter
+                    let newObj = JSON.parse(result); //assign the result as a JS object
+                    newObj.forEach(element => {
+                        json_response.push(element); //add each result to json_response array
+                    });
 
-                //check if length of filteredTextArray equals to the flag counter 
-                if(counter === textCount){                
-                res.send(JSON.stringify(json_response)); //send the json_response as a JSON string
+                    //check if length of filteredTextArray equals to the flag counter 
+                    if(counter === textCount){                
+                        res.send(JSON.stringify(json_response)); //send the json_response as a JSON string
+                    }
                 }
         });
 

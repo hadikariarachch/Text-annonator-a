@@ -22,11 +22,10 @@ class Adaptor1 {
     var result = { keyword: keyword, description: description, ontology: fullOntologyName }; //creating the result object structure with declared variables
 
     //sending a request to the external API
-    request(url, function (err, res, body) {
+    request(url, function (error, res, body) {
         //checking first for conection errors with the API
-        if (err) {
-            console.log('Error: ', error);
-            return callback(err); //sending the error through callback parameter
+        if (error) {
+            return callback(error); //sending the error through callback parameter
         } else {
             //declare a variable to grab the body of response from API
             let response = JSON.parse(body); //pass the response body to JavaScript object.
