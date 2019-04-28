@@ -29,15 +29,25 @@ class Adaptor2 {
                 //declare a variable to grab the body of response from API
                 let response = JSON.parse(body); //pass the response body to JavaScript object.              
                 
-                //check for a valid result from the API
-                if (response.collection[0] && response.collection[0].definition[0]) {
-                    result.description = response.collection[0].definition[0]; //get the definition from the  response object and assign to description variable
-                    return callback(JSON.stringify(result)); //callback the result
+                //Check if the definition value exists on the response object
+                if(("definition" in response.collection[0])) {
+                    //check for a valid result from the API
+                    if (typeof response.collection[0] && response.collection[0].definition[0]) {
+                        result.description = response.collection[0].definition[0]; //get the definition from the  response object and assign to description variable
+                        console.log("RESULT FROM AD2 = " + JSON.stringify(result));
+                
+                        return callback(JSON.stringify(result)); //callback the result
+                    }
+                    else {
+                        result.description = 'No definition found'; //assign 'No Definition found' to description variable
+                        return callback(JSON.stringify(result)); //callback the JSON converted result object
+                    }                
                 }
                 else {
-                    result.description = 'No Definition found'; //assign 'No Definition found' to description variable
+                    result.description = 'No definition found'; //assign 'No Definition found' to description variable
                     return callback(JSON.stringify(result)); //callback the JSON converted result object
                 }
+                
             }
         });       
     }

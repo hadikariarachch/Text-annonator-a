@@ -4,7 +4,9 @@
  * This will return a JSON string as the response.
  */
 
-var dictionary = require('./dictionary.js'); //require the dictionary.js file and assign to a variable
+const dictionary = require('./dictionary.js'); //require the dictionary.js file and assign to a variable
+const stopWordsList = require('../models/stopWords.js'); //requires stopWords.js file and hold it in a constant
+
 
 //creating an exported getDefinition() function to respond GUI calls
 exports.getDefinition = function (req, res) {
@@ -33,23 +35,19 @@ exports.getDefinition = function (req, res) {
     filteredText.forEach(keyword => {
         
         //call dictionary.getDescription() with each words
-        dictionary.getDescription(keyword, selectedOntologies, function (result , error) {         
+        dictionary.getDescription(keyword, selectedOntologies, function (result) {         
 
-                if (error) {
-                    console.log("ERROR : ", error);
-                    res.send(error); //sending the error through callback parameter
-                } else {
-                    counter++; //increment the flag counter
-                    let newObj = JSON.parse(result); //assign the result as a JS object
-                    newObj.forEach(element => {
-                        json_response.push(element); //add each result to json_response array
-                    });
+            counter++; //increment the flag counter
+            let newObj = JSON.parse(result); //assign the result as a JS object
+            newObj.forEach(element => {
+                json_response.push(element); //add each result to json_response array
+            });
 
-                    //check if length of filteredTextArray equals to the flag counter 
-                    if(counter === textCount){                
-                        res.send(JSON.stringify(json_response)); //send the json_response as a JSON string
-                    }
-                }
+            //check if length of filteredTextArray equals to the flag counter 
+            if(counter === textCount){                
+                res.send(JSON.stringify(json_response)); //send the json_response as a JSON string
+            }    
+                    
         });
 
     });  
@@ -73,14 +71,21 @@ function filterWords(text) {
 
     text = text.split(' '); //split the string by spaces
 
-    //create an array of unnecessary words
-    var filter_words = ["I", "a", "above", "after", "against", "all", "alone", "always", "am", "amount", "an", "and", "any", "are", "around", "as", "at", "back", "be", "before", "behind", "below", "between", "bill", "both", "bottom", "but", "by", "call", "can", "co", "con", "de", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "eleven", "empty", "ever", "every", "few", "fill", "find", "fire", "first", "five", "for", "former", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "he", "her", "hers", "him", "his", "i", "ie", "if", "in", "into", "is", "it", "last", "less", "ltd", "many", "may", "me", "mill", "mine", "more", "most", "mostly", "must", "my", "name", "next", "nine", "no", "none", "nor", "not", "nothing", "now", "of", "off", "often", "on", "once", "one", "only", "or", "other", "others", "out", "over", "part", "per", "put", "re", "same", "see", "serious", "several", "she", "show", "side", "since", "six", "so", "some", "sometimes", "still", "take", "ten", "the", "then", "third", "this", "thick", "thin", "three", "through", "to", "together", "top", "toward", "towards", "twelve", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "when", "which", "while", "who", "whole", "will", "with", "within", "without", "you", "yourself", "yourselves"];
+    //create an array to hold unnecessary words from stopWords.js file
+    var filter_words = [];
+
+    //check if stopWordsList variable is undefined
+    if (stopWordsList !== undefined) {
+        filter_words = stopWordsList.StopWordsList;
+    }  
 
     //append all necessary words one by one to a string 'text'
     text = text.filter(function (el) {
         return !filter_words.includes(el);
     });
 
+    console.log("Annotator application : NES WORDS = " + text);
+    
     return text; //return the string text with filtered words
 
 };

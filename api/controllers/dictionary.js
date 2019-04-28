@@ -28,19 +28,16 @@ exports.getDescription = function(keywordText, selectedOntologiesList, callback)
         for (let index = 0; index < selectedOntologies.length; index++) {    
           let AdaptorObject = adaptorRegistry[selectedOntologies[index]]; //assigning the correct adaptor instance which matches the element name
           
-          AdaptorObject.getDescription(keyword, function (result, error) { //call the getDescription() function of assigned adaptor instance with a callback function
+          AdaptorObject.getDescription(keyword, function (result) { //call the getDescription() function of assigned adaptor instance with a callback function
 
-            if(error){
-              return callback(error); //sending the error through callback parameter
-            } else{
-                dataArray.push(JSON.parse(result)); //populate the empty data array with the JS object converted result
-                JSONObjectToApplication = JSON.stringify(dataArray); //convert to JSON
-                counter++; //increment the counter
+            dataArray.push(JSON.parse(result)); //populate the empty data array with the JS object converted result
+            JSONObjectToApplication = JSON.stringify(dataArray); //convert to JSON
+            counter++; //increment the counter
 
-                //if counter equals to the number of ontilogies from the given list, CALLBACK the function with the JSON result
-                if(counter === totalOntologies){     
-                return callback(JSONObjectToApplication);
-                }
+            //if counter equals to the number of ontilogies from the given list, CALLBACK the function with the JSON result
+            if(counter === totalOntologies){ 
+              console.log("RESULT FROM DICTIONARY = " + JSON.stringify(result));    
+              return callback(JSONObjectToApplication);            
             }   
 
           });    
@@ -71,7 +68,7 @@ exports.getDescription = function(keywordText, selectedOntologiesList, callback)
 
                 //if counter equals to the number of all ontilogies, CALLBACK the function with the JSON result
                 if(counter === totalOntologies){    
-                return callback(JSONObjectToApplication);
+                  return callback(JSONObjectToApplication);
                 }                            
           });
 
