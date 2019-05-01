@@ -35,8 +35,7 @@ exports.getDescription = function(keywordText, selectedOntologiesList, callback)
             counter++; //increment the counter
 
             //if counter equals to the number of ontilogies from the given list, CALLBACK the function with the JSON result
-            if(counter === totalOntologies){ 
-              console.log("RESULT FROM DICTIONARY = " + JSON.stringify(result));    
+            if(counter === totalOntologies){     
               return callback(JSONObjectToApplication);            
             }   
 
