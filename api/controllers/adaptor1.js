@@ -19,13 +19,18 @@ class Adaptor1 {
     let url = `http://data.bioontology.org/search?q=${keyword}&ontologies=${ontology}&roots_only=true&apikey=${apiKey}`; //External API call URL
 
     var description = ""; //declaring an empty description variable
-    var result = { keyword: keyword, description: description, ontology: fullOntologyName }; //creating the result object structure with declared variables
+    var resourceUrl= ""; //declaring an empty url variable
+    var result = { keyword: keyword, description: description, resourceUrl: resourceUrl, ontology: fullOntologyName }; //creating the result object structure with declared variables
 
     //sending a request to the external API
     request(url, function (error, res, body) {
         //checking first for conection errors with the API
         if (error) {
-            return callback(error); //sending the error through callback parameter
+            console.log("ERROR FROM adaptor1.js : "+ error);
+            
+            result.description = 'Ontology error'; //assign 'Ontology error' to description variable
+            result.resourceUrl = 'Ontology error'; //assign 'Ontology error' to resourceUrl variable
+            return callback(JSON.stringify(result)); //callback the JSON converted result object
         } else {
             //declare a variable to grab the body of response from API
             let response = JSON.parse(body); //pass the response body to JavaScript object.
@@ -36,20 +41,31 @@ class Adaptor1 {
                 if(("definition" in response.collection[0])) {
                     
                     result.description = response.collection[0].definition[0]; //get the definition from the  response object and assign to description variable
-                    console.log("RESULT FROM AD1 = " + JSON.stringify(result));
-                
-                    //console.log("COLLECTION FROM AD1 = " + JSON.stringify(response.collection[0]));
-
-                    return callback(JSON.stringify(result)); //callback the result
-                                   
+                                                       
                 }
                 else {
                     result.description = 'No definition found'; //assign 'No Definition found' to description variable
-                    return callback(JSON.stringify(result)); //callback the JSON converted result object
+                }                
+
+                //Check if the "ui" value exists on the response collection object. In the response collection, resourse url will be inside the "links" element as "ui"
+                if(("links" in response.collection[0])) {
+                    if ("ui" in response.collection[0].links) {
+                        
+                        result.resourceUrl = response.collection[0].links["ui"]; //get the resourceUrl("ui") from the  response object and assign to resourceUrl variable
+                            
+                    } else {
+                        result.resourceUrl = 'No link found'; //assign 'No link found' to resourceUrl variable
+                    }                                
                 }
+                else {
+                    result.resourceUrl = 'No link found'; //assign 'No link found' to resourceUrl variable
+                }
+                //console.log("AD1 RESULT : " + JSON.stringify(result));
+                return callback(JSON.stringify(result)); //callback the JSON converted result object
             }
             else{
                 result.description = 'No definition found'; //assign 'No Definition found' to description variable
+                result.resourceUrl = 'No link found'; //assign 'No link found' to resourceUrl variable
                 return callback(JSON.stringify(result)); //callback the JSON converted result object
             }
 

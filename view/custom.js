@@ -74,13 +74,9 @@ function generateResult(){
 function populateResult(responseJsonString){
 required_json = JSON.parse(responseJsonString);
 
-//console.log(required_json);
-
 for(var i in required_json){
 
     var row_content=required_json[i];
-
-    var items=Object.keys(required_json[i]);
 
 	//get table with id annotation_result
     var table=document.getElementById("annotation_result");
@@ -88,18 +84,35 @@ for(var i in required_json){
 	var tbody=document.createElement("tbody");
 	//creates a tr tag
 	var row=document.createElement("tr");
+    
+    /*
+        Creating required TDs and setting values. 
+    */
+    var keywordCell = document.createElement("td");
+    keywordCell.innerHTML = row_content["keyword"];
+    row.appendChild(keywordCell); //set TD to ROW
 
-	for(var i in items){
-		//creates a td tag
-		var cell=document.createElement("td");
-		if(row_content[items[i]].name!=undefined)
-			cell.innerHTML="<a href='"+row_content[items[i]].link+"'>"+row_content[items[i]].name+"</a>";
-		else
-		if(row_content[items[i]]!=undefined)
-			cell.innerHTML=	row_content[items[i]];
-		//appends td tag to tr tag like <tr><td></td><td></td>....</tr>
-		row.appendChild(cell);
-	}
+    var descriptionCell = document.createElement("td");
+    descriptionCell.innerHTML = row_content["description"];
+    row.appendChild(descriptionCell); //set TD to ROW
+
+    var resourceUrlCell = document.createElement("td");
+    if (row_content["description"] === "No definition found") {
+        resourceUrlCell.innerHTML = "No link found";
+    }else if(row_content["description"] === "Ontology error"){
+        resourceUrlCell.innerHTML = "Ontology error";
+    } else {
+        var resUrlElement = document.createElement("a");
+        resUrlElement.setAttribute("href", row_content["resourceUrl"]);
+        resUrlElement.setAttribute("target", "_blank");
+        resUrlElement.innerHTML = "Go to resource";
+        resourceUrlCell.appendChild(resUrlElement); //add link element to the TD
+    }
+    row.appendChild(resourceUrlCell); //set TD to ROW
+
+    var ontologyCell = document.createElement("td");
+    ontologyCell.innerHTML = row_content["ontology"];
+    row.appendChild(ontologyCell); //set TD to ROW
 
     //appends entire row(tr) to the table body (tbody)
     tbody.innerHTML = "";

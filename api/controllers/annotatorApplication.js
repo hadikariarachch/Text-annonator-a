@@ -20,7 +20,7 @@ exports.getDefinition = function (req, res) {
     var selectedOntologies = JSON.parse(selectedOntolos); //parse the JSON to a JS object
     
     var filteredText = filterWords(text); //Call filterWords() function with the search text and get the filtered text
-    var json_response = []; //declaring an empty array
+    var responseArray = []; //declaring an empty array
 
     let filteredTextArray = []; //declaring an empty array
 
@@ -40,12 +40,12 @@ exports.getDefinition = function (req, res) {
             counter++; //increment the flag counter
             let newObj = JSON.parse(result); //assign the result as a JS object
             newObj.forEach(element => {
-                json_response.push(element); //add each result to json_response array
+                responseArray.push(element); //add each result to responseArray array
             });
 
             //check if length of filteredTextArray equals to the flag counter 
             if(counter === textCount){                
-                res.send(JSON.stringify(json_response)); //send the json_response as a JSON string
+                res.send(JSON.stringify(responseArray)); //send the responseArray as a JSON string
             }    
                     
         });
