@@ -6,7 +6,7 @@
 
 const dictionary = require('./dictionary.js'); //require the dictionary.js file and assign to a variable
 const stopWordsList = require('../models/stopWords.js'); //requires stopWords.js file and hold it in a constant
-
+var fs = require('fs');
 
 //creating an exported getDefinition() function to respond GUI calls
 exports.getDefinition = function (req, res) {
@@ -31,6 +31,8 @@ exports.getDefinition = function (req, res) {
 
     let textCount = filteredTextArray.length; //get length of filteredTextArray
     let counter = 0; //flag to hold a count
+    var preparedDataObject = {}; //creating an empty object to pass down and get filled by "prepareOutputData" function
+    var outputDataObject = {}; //creating an empty object to grab the returned object from "prepareOutputData" function and pass down to "saveToJsonFile" function
 
     filteredText.forEach(keyword => {
         
@@ -41,10 +43,24 @@ exports.getDefinition = function (req, res) {
             let newObj = JSON.parse(result); //assign the result as a JS object
             newObj.forEach(element => {
                 responseArray.push(element); //add each result to responseArray array
+
+                //prepare the result data to save in external JSON file
+                outputDataObject = prepareOutputData(preparedDataObject, element);
+
             });
 
             //check if length of filteredTextArray equals to the flag counter 
-            if(counter === textCount){                
+            if(counter === textCount){
+
+                //calling the "saveToJsonFile" function to save the results 
+                saveToJsonFile(outputDataObject, function(error, result){
+                    if(error){
+                        console.log("ERROR: annotatorApplication.js, saveToJsonFile() : "+ error);                        
+                    }else{
+                        console.log("JSON FILE CREATED SUCCESSFULLY!");
+                    }
+                }); 
+
                 res.send(JSON.stringify(responseArray)); //send the responseArray as a JSON string
             }    
                     
@@ -53,6 +69,30 @@ exports.getDefinition = function (req, res) {
     });  
 
 };
+
+//create a function to prepare the output data to write in external JSON file.
+function prepareOutputData(dataObject, searchResultDataArray){
+    //grab the search data from variables
+    let keyword = searchResultDataArray.keyword;
+    let description = searchResultDataArray.description;
+    let resourceUrl = searchResultDataArray.resourceUrl;
+    let ontology = searchResultDataArray.ontology;
+
+    let combinedKeyName = keyword + ontology; //creating a combined name for the ease of reading back data
+    var myObject = dataObject; //create empty object to pass values
+    myObject[combinedKeyName] = {description: description, resourceUrl: resourceUrl, ontology: ontology}; //passing values to empty object
+
+    return myObject;
+}
+
+//Creating normal JS function to handle data savings into a JSON.file in PC.
+function saveToJsonFile(preparedDataObject, callback){    
+
+    var jsonConvertedString = JSON.stringify(preparedDataObject); //convert to json data    
+    fs.writeFile('output/myjsonfile.json', jsonConvertedString, 'utf8', callback); //write a JSON file with data inside "output" folder
+
+};
+
 
 //creating an exported getOntologyList() function to respond GUI calls
 exports.getOntologyList = function (req, res) {
