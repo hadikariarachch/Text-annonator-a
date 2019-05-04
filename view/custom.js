@@ -40,7 +40,6 @@ function loadOntologies(){
 function generateResult(){
         
     var annotateText=document.getElementById("annotorText").value; //get the text value
-    console.log(annotateText);
 
     var selectedOntologies = ["Adaptor1", "Adaptor2"]; //currently hardcoding the selected ontologies
     //var selectedOntologies=document.getElementById("ontologies").value; //get the correct ID array from UI

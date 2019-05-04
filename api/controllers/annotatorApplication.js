@@ -12,12 +12,18 @@ var fs = require('fs');
 exports.getDefinition = function (req, res) {
 
     var text = req.params.searchtext; //get the searchtext from from request parameters
-
-    console.log("Text = "+text+" & ontologiesJsonString = "+req.params.selectedontologies);
-
     var selectedOntologiesString = req.params.selectedontologies; //get the selected ontologies from from request parameters
-    var selectedOntolos = selectedOntologiesString.split(":")[1]; //remove ':' from the selected Ontologies JSON String
-    var selectedOntologies = JSON.parse(selectedOntolos); //parse the JSON to a JS object
+    
+    //check for ":" exists in front of the parameters and remove them. (This is because it will be passing from request URL)
+    if( text.charAt( 0 ) === ':' ) {
+        text = text.slice( 1 );
+    }
+    if( selectedOntologiesString.charAt( 0 ) === ':' ) {
+        selectedOntologiesString = selectedOntologiesString.slice( 1 );
+    }
+    console.log("Text = "+ text +" & ontologiesJsonString = "+ selectedOntologiesString);
+    
+    var selectedOntologies = JSON.parse(selectedOntologiesString); //parse the JSON to a JS object
     
     var filteredText = filterWords(text); //Call filterWords() function with the search text and get the filtered text
     var responseArray = []; //declaring an empty array
@@ -78,9 +84,12 @@ function prepareOutputData(dataObject, searchResultDataArray){
     let resourceUrl = searchResultDataArray.resourceUrl;
     let ontology = searchResultDataArray.ontology;
 
-    let combinedKeyName = keyword + ontology; //creating a combined name for the ease of reading back data
+    let combinedKeyName = (keyword.toLowerCase() + ontology.toUpperCase()); //creating a combined name for the ease of reading back data
+    combinedKeyName = combinedKeyName.replace(/\s+/g, '_'); //replacing middle spaces with "_" to be more clear.
+    console.log("COMBINED PRIMARY KEY : "+ combinedKeyName);
+    
     var myObject = dataObject; //create empty object to pass values
-    myObject[combinedKeyName] = {description: description, resourceUrl: resourceUrl, ontology: ontology}; //passing values to empty object
+    myObject[combinedKeyName] = {keyword: keyword, description: description, resourceUrl: resourceUrl, ontology: ontology}; //passing values to empty object
 
     return myObject;
 }
