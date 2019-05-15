@@ -24,7 +24,7 @@ var $ = jQuery = require('jquery')(window); //requires JQuery
 
 app.get("/", function(req, res) {
   //res.send("Welcome to annotator");
-  res.sendFile(path.join(__dirname, "view", "index.html")); //call the startup index file and display it
+  res.sendFile(path.join(__dirname, "view", "index.html")); //call the startup html file and display it
 });
 
 //using the required libraries

@@ -97,8 +97,16 @@ function prepareOutputData(dataObject, searchResultDataArray){
 //Creating normal JS function to handle data savings into a JSON.file in PC.
 function saveToJsonFile(preparedDataObject, callback){    
 
-    var jsonConvertedString = JSON.stringify(preparedDataObject); //convert to json data    
-    fs.writeFile('output/myjsonfile.json', jsonConvertedString, 'utf8', callback); //write a JSON file with data inside "output" folder
+    var jsonConvertedString = JSON.stringify(preparedDataObject); //convert to json data 
+
+    var timestamp = Date.now().toString(); //get date from milliseconds since 1970/01/01 plus convert it to string
+    var filename = timestamp;
+    var path = "output/'"+ filename +"'.json" //create a file path variable
+
+    // check if a file already exists with its name
+    if(!fs.existsSync(path)){
+        fs.writeFile(path, jsonConvertedString, 'utf8', callback); //write a JSON file with data inside "output" folder
+    }
 
 };
 

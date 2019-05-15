@@ -4,6 +4,7 @@
  */
 
 var required_json=[]; //declare empty array
+var hasHeader = false; //flag to check if the results table has a header
 
 //creating a function to load connected ontologies to the GUI
 function loadOntologies(){   
@@ -30,16 +31,16 @@ function loadOntologies(){
     request.send(); //send the ALAX request
 
     //Jquery for autocomplete dropdown menu with id = 'ontologies'
-    $( "#ontologies" ).autocomplete({
-        source: ontologyList
-    });
+    // $( "#ontologies" ).autocomplete({
+    //     source: ontologyList
+    // });
             
 };
 
 //creating a function to send AJAX request to getdefinition() in annotatorApplication.js API
 function generateResult(){
         
-    var annotateText=document.getElementById("annotorText").value; //get the text value
+    var annotateText=document.getElementById("typeArea").value; //get the text value
 
     var selectedOntologies = ["Adaptor1", "Adaptor2"]; //currently hardcoding the selected ontologies
     //var selectedOntologies=document.getElementById("ontologies").value; //get the correct ID array from UI
@@ -71,53 +72,74 @@ function generateResult(){
 
 //creating a function to populate the table in index.html page
 function populateResult(responseJsonString){
-required_json = JSON.parse(responseJsonString);
+    required_json = JSON.parse(responseJsonString);
 
-for(var i in required_json){
+    //get table with id annotationResult
+    var table=document.getElementById("annotationResult");
 
-    var row_content=required_json[i];
-
-	//get table with id annotation_result
-    var table=document.getElementById("annotation_result");
-	//creates a tbody tag
-	var tbody=document.createElement("tbody");
-	//creates a tr tag
-	var row=document.createElement("tr");
-    
-    /*
-        Creating required TDs and setting values. 
-    */
-    var keywordCell = document.createElement("td");
-    keywordCell.innerHTML = row_content["keyword"];
-    row.appendChild(keywordCell); //set TD to ROW
-
-    var descriptionCell = document.createElement("td");
-    descriptionCell.innerHTML = row_content["description"];
-    row.appendChild(descriptionCell); //set TD to ROW
-
-    var resourceUrlCell = document.createElement("td");
-    if (row_content["description"] === "No definition found") {
-        resourceUrlCell.innerHTML = "No link found";
-    }else if(row_content["description"] === "Ontology error"){
-        resourceUrlCell.innerHTML = "Ontology error";
-    } else {
-        var resUrlElement = document.createElement("a");
-        resUrlElement.setAttribute("href", row_content["resourceUrl"]);
-        resUrlElement.setAttribute("target", "_blank");
-        resUrlElement.innerHTML = "Go to resource";
-        resourceUrlCell.appendChild(resUrlElement); //add link element to the TD
+    //creates a header in table
+    if (!hasHeader) {
+        hasHeader = true;
+        document.getElementById("saveSessionButton").disabled = false; //enable the save session button
+        var thead = document.createElement("thead");
+        var theadRow = document.createElement("tr");
+        theadRow.setAttribute("style", "background-color : #dee0e2;");
+        var th1 = document.createElement("th");
+        th1.innerHTML = "Search word";
+        var th2 = document.createElement("th");
+        th2.innerHTML = "Description";
+        var th3 = document.createElement("th");
+        th3.innerHTML = "Ontology";
+        theadRow.appendChild(th1);
+        theadRow.appendChild(th2);
+        theadRow.appendChild(th3);
+        thead.appendChild(theadRow);
+        table.appendChild(thead);
     }
-    row.appendChild(resourceUrlCell); //set TD to ROW
 
-    var ontologyCell = document.createElement("td");
-    ontologyCell.innerHTML = row_content["ontology"];
-    row.appendChild(ontologyCell); //set TD to ROW
 
-    //appends entire row(tr) to the table body (tbody)
-    tbody.innerHTML = "";
-	tbody.appendChild(row);
+    for(var i in required_json){
 
-	//appends tbody to the table
-	table.appendChild(tbody);
-}
+        var row_content=required_json[i];
+
+        //creates a tbody tag
+        var tbody=document.createElement("tbody");
+	
+	    //creates a tr tag
+        var row=document.createElement("tr");
+        row.setAttribute("style", "background-color : #f2f2f2;");
+    
+        /*
+            Creating required TDs and setting values. 
+        */
+        var keywordCell = document.createElement("td");
+
+        if (row_content["description"] === "No definition found") {
+            keywordCell.innerHTML = row_content["keyword"];
+        }else if(row_content["description"] === "Ontology error"){
+            keywordCell.innerHTML = row_content["keyword"];
+        } else {
+            var resUrlElement = document.createElement("a");
+            resUrlElement.setAttribute("href", row_content["resourceUrl"]);
+            resUrlElement.setAttribute("target", "_blank");
+            resUrlElement.innerHTML = row_content["keyword"];
+            keywordCell.appendChild(resUrlElement);        
+        }
+        row.appendChild(keywordCell); //set TD to ROW
+
+        var descriptionCell = document.createElement("td");
+        descriptionCell.innerHTML = row_content["description"];
+        row.appendChild(descriptionCell); //set TD to ROW
+
+        var ontologyCell = document.createElement("td");
+        ontologyCell.innerHTML = row_content["ontology"];
+        row.appendChild(ontologyCell); //set TD to ROW
+
+        //appends entire row(tr) to the table body (tbody)
+        tbody.innerHTML = "";
+	    tbody.appendChild(row);
+
+	    //appends tbody to the table
+	    table.appendChild(tbody);
+    }
 };

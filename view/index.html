@@ -1,149 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Text Annotator</title>
-        <link rel="stylesheet" href="css/jquery-ui.css">
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/font-awesome.min.css" />
-        <link rel="stylesheet" href="css/font-awesome.css" />
-        <link rel="stylesheet" href="css/style.css">
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Homepage</title>
+    <!--CSS section-->
+    <link rel="stylesheet" href="css/home.css">
 
-        <script type="text/javascript" src="js/jquery-1.12.4.js"></script>
-        <script type="text/javascript" src="js/jquery-ui.js"></script>
-        <script type="text/javascript" src="custom.js"></script>
-        
-    </head>
-
-<header>
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
-      </button>
-      <a class="navbar-brand" href="#">CSIRO</a>
+    <!--JavaScript section-->
+    <script type="text/javascript" src="custom.js"></script>
+  </head>
+  <body>
+    <!--Header section-->
+    <div class="header">
+        <div class="headerName"><h1>Text Annotator</h1></div>        
+        <button class="loginButton" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
     </div>
 
-    <div class="collapse navbar-collapse" id="#Navbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Browse</a></li>
-        <li><a href="#">Ontologies</a></li>
-        <li><a href="#">Reference</a></li>
-        <li><a href="#">Mapping</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">My Annotations Login</a></li>
-      </ul>
+    <!--Body section-->
+    <div class="wholeBody">
+        <div class="leftsideBody">
+
+            <div class="typeAreaDiv">
+                <label for="typeArea" class="labels">Enter your text</label>
+                <textarea type="text" class="textTypeArea" name="typeArea" id="typeArea"  placeholder="  Enter or paste text to be annotated"></textarea>
+            </div>
+
+            <div class="ontologiesDiv">
+                <label for="ontologies" class="labels">Select ontologies</label>
+                <input type="text" class="selectOntologies" name="ontologies" id="ontologies"  placeholder="Start typing to select ontologies or leave blank to use all"/>
+            </div>
+
+            <div class="annotateButtonDiv">
+                    <input class="clickButton" id="annotatorButton" type="button" value="Get Annotations" onClick="generateResult()">
+            </div>
+
+        </div>
+
+        <div class="rightsideBody" >
+            <div resultsDiv style="overflow-y:scroll; height:480px; border-bottom: solid 1px #a8a8a8">
+                <table class="resultTable" id="annotationResult"></table>
+            </div>
+
+            <div class="saveSessionButtonDiv">
+                <input class="clickButton" id="saveSessionButton" type="button" value="Save Session" onClick="generateResult()" disabled>
+            </div>
+        </div>
     </div>
-  </div>
-</nav>
-</header>
 
-    <body>
-        <div class="container space">
-            <h1>Annotator</h1>
-            <p>Get annotations for texts from the ontologies <i class="fa fa-info-circle" title="Input your required texts..."></i></p>
-            <div class="col-md-9">
-                <form class="" method="post" action="#">
-                    <div class="form-group">
-                        <div class="cols-sm-10">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-pencil fa" aria-hidden="true"></i></span>
-                                <textarea type="text" class="form-control" name="annotorText" id="annotorText"  placeholder="Enter or paste text to be annotated"></textarea>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="ontologies" class="cols-sm-2 control-label">Select ontologies</label>
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" name="ontologies" id="ontologies"  placeholder="Start typing to select ontologies or leave blank to use all"/>
-                        </div>
-                        <div style="float: right; font-size: smaller;">
-                            <a id="ont_select_clear" href="javascript:void(0)">clear selection</a>
-                            &nbsp;&nbsp;&nbsp;
-                            <a id="ont_select_adv_href" href="javascript:void(0)">select from list</a>
-                        </div>
-                    </div>
-                    
-                    <input class="btn btn-primary" id="annotator_button" type="button" value="Get Annotations" onClick="generateResult()">
-                </form>
+    <!--Login form model-->
+    <div id="id01" class="modal">
+  
+        <form class="modal-content animate" action="/action_page.php">
+          <div class="imgcontainer">
+            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+          </div>
+      
+          <div class="container">
+            <label for="uname"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="uname" required>
+      
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" required>
 
-				<br/>
-				<br/>
-				
-                <div id="annotation_result_div">
-
-                <table id="annotation_result" class="table table-hover">
-                <thead>
-                    <tr><th>SEARCH TERM</th><th>DESCRIPTION</th><th>RESOURCE URL</th><th>ONTOLOGY</th></tr>
-                </thead>
-               
-                </table>
-                </div>
-
-            </div>
-        </div>
-        
-        <script src="./custom.js"></script>
-    </body>
-
-    <footer>
-        <div class="container">
-        <div class="col-md-3">
-            <div class="borderRight">
-                  <p class="footerLogo">CSIRO</p> 
-                  <p>7637 Laurel Dr. King Of Prussia, PA 19406</p>
-                  <p>Use this tool as test data for an automated system or find your next pen</p>
-            </div>
-            </div>
-            <div class="col-md-3">
-               <h6> About Company</h6>
-               <p>But horizontal lines can only be a full pixel high.</p>
-               <a href="#" class="btn-footer"> More Info </a>
-               <a href="#" class="btn-footer"> Contact Us</a>
-            </div>
-        <div class="col-md-3">
-               <h6>Quick Links</h6>
-               <div class="col-md-6 noPadding">
-                     <ul>
-                        <li><i class="fa fa-home"></i> <a href="#"> Home</a> </li>
-                        <li><i class="fa fa-certificate"></i> <a href="#"> About</a> </li>
-                        <li><i class="fa fa-users"></i> <a href="#"> Team</a> </li>
-                        <li><i class="fa fa-phone"></i><a href="#"> Contact</a> </li>
-                     </ul>
-                </div>
-               <div class="col-md-6 noPadding">
-                     <ul>
-                        <li><i class="fa fa-home"></i> <a href="#"> Home</a> </li>
-                        <li><i class="fa fa-certificate"></i> <a href="#"> About</a> </li>
-                        <li><i class="fa fa-users"></i> <a href="#"> Team</a> </li>
-                        <li><i class="fa fa-phone"></i><a href="#"> Contact</a> </li>
-                     </ul>
-                </div>
-        </div>
-        <div class="col-md-3">
-               <h6>Find us on</h6>
-               <div class="social">
-                  <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                  <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                  <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                  <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
-                  <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-               </div>
-               <hr class="footerBdr">
-               <form class="form-footer my-3">
-                  <input type="text"  placeholder="search here...." name="search">
-                  <input type="button" value="Go" >
-               </form>
-        </div>
-    </footer>
-    <div class="copyRight">
-        company name here © 2018. All Rights Reserved.
-    </div>
+            <div id="errorMessage">Username or password not match</div>
+              
+            <button type="submit">Login</button>
+          </div>
+      
+          <!-- <div class="container" style="background-color:#f1f1f1">
+            <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+            <span class="psw">Forgot <a href="#">password?</a></span>
+          </div> -->
+        </form>
+      </div>
+      
+      <!--Close the popup window when anywhere else clicked-->
+      <script>
+            // Get the modal
+            var modal = document.getElementById('id01');
+            
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+      </script>
+  </body>
 </html>
