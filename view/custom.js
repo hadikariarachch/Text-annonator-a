@@ -8,43 +8,59 @@ var hasHeader = false; //flag to check if the results table has a header
 
 //creating a function to load connected ontologies to the GUI
 function loadOntologies(){   
+    console.log("Running the loadOntologies function!");
     
-    var ontologyList = new Array();
+    // Get the <datalist> elements.
+    var options = ""; //create an empty string
     var request = new XMLHttpRequest(); //create a xmlhttp request
     request.open('GET', 'http://localhost:3000/annotatorapp/getontologylist', true); //define as an ALAX request
     request.onload = function () {
 
     // Begin accessing JSON data here
     var data = this.response; //get the response
+    var dataToArray = JSON.parse(data); //convert to an JS array     
 
-        //if response status ok, then populate ontologyList array
-        if (request.status >= 200 && request.status < 400) {
-            data.forEach(ontology => {
-            ontologyList.push(ontology.name);
-            });
-        } else {
-            alert('some error occured');
+    //if response status ok, then populate dataList in index.html array
+    if (request.status >= 200 && request.status < 400) {
+
+        // Loop over the array.
+        for (let index = 0; index < dataToArray.length; index++) {
+            options += '<option id="'+ dataToArray[index]._id +'" name="'+ dataToArray[index].name +'" value="'+ dataToArray[index].name +'" onClick="setOntologyId()"/>'; //concatanate options string with all the array values   
+            document.getElementById('jsonOntologyList').innerHTML = options; //grab the dataList element and insert options string
         }
-          
+        } else {
+            alert('Error occured when loading ontology list!');
+        }         
     }
 
-    request.send(); //send the ALAX request
-
-    //Jquery for autocomplete dropdown menu with id = 'ontologies'
-    // $( "#ontologies" ).autocomplete({
-    //     source: ontologyList
-    // });
-            
+    request.send(); //send the ALAX request            
 };
+
+//creating a function to set the selected ontology ID to hidden tag
+// function setOntologyId(){
+//     console.log("Inside setOntologyId() function");
+    
+//     var inputElementValue = document.getElementById("ontologies").value; //get the selected datalist item value
+//     var ontologyId = document.getElementById("jsonOntologyList").options.namedItem(inputElementValue)._id; //get the _Id of selected item. We use the value to fild it's id
+//     document.getElementById("selectedOntologyId").value = ontologyId; //set the ontologyId to the hidden tag    
+// }
+
+// run loadOntologies function and populate datalist when the window loads
+window.onload = loadOntologies();   
+
 
 //creating a function to send AJAX request to getdefinition() in annotatorApplication.js API
 function generateResult(){
-        
+    var selectedOntologies = []; //creating an empty array to hold selected ontologies
     var annotateText=document.getElementById("typeArea").value; //get the text value
 
-    var selectedOntologies = ["Adaptor1", "Adaptor2"]; //currently hardcoding the selected ontologies
-    //var selectedOntologies=document.getElementById("ontologies").value; //get the correct ID array from UI
+    //selectedOntologies = ["Adaptor1", "Adaptor2"]; //testing: hardcoding the selected ontologies
     
+    //check if user provided a preffered ontology or else it stays as empty
+    if(document.getElementById("selectedOntologyId").value != null){
+        selectedOntologies.push(document.getElementById("selectedOntologyId").value); //put the value inside selectedOntologies array
+    }
+
     var jsonStringOfSelectedOntologies = JSON.stringify(selectedOntologies); //make a JSON string from above 'selectedOntologies'
 
 	console.log(annotateText+" "+jsonStringOfSelectedOntologies);

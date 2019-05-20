@@ -18,7 +18,7 @@ exports.getDescription = function(keywordText, selectedOntologiesList, callback)
     var JSONObjectToApplication = null; //declaring a null variable
 
       //check for null entries on the selected Ontologies List
-      if (selectedOntologiesList != null && selectedOntologiesList.length != 0) {  
+      if (selectedOntologiesList != null && selectedOntologiesList[0] != "") {  
         let selectedOntologies = selectedOntologiesList;  // Assigning the selectedOntologies array if it's not null
         let totalOntologies = selectedOntologiesList.length; //get the length of selectedOntologiesList
         let counter = 0; //creating a counter

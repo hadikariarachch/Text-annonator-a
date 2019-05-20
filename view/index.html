@@ -27,7 +27,10 @@
 
             <div class="ontologiesDiv">
                 <label for="ontologies" class="labels">Select ontologies</label>
-                <input type="text" class="selectOntologies" name="ontologies" id="ontologies"  placeholder="Start typing to select ontologies or leave blank to use all"/>
+                <input class="selectOntologies" name="ontologies" id="ontologies" list="jsonOntologyList" autocomplete="on"  placeholder="Start typing to select ontologies or leave blank to use all"/>
+                <input type="hidden" id="selectedOntologyId" value=""/>
+                <datalist id="jsonOntologyList">
+                </datalist>
             </div>
 
             <div class="annotateButtonDiv">
@@ -37,7 +40,7 @@
         </div>
 
         <div class="rightsideBody" >
-            <div resultsDiv style="overflow-y:scroll; height:480px; border-bottom: solid 1px #a8a8a8">
+            <div resultsDiv style="overflow-y:scroll; height:450px; border-bottom: solid 1px #a8a8a8">
                 <table class="resultTable" id="annotationResult"></table>
             </div>
 
@@ -85,6 +88,24 @@
                     modal.style.display = "none";
                 }
             }
-      </script>
+
+            var ontologiesElement = document.getElementById('ontologies');
+            if(ontologiesElement){
+
+              var ontologyId = "";
+
+              ontologiesElement.addEventListener('input', function () {
+                var inputElementValue = document.getElementById("ontologies").value; //get the selected datalist item value
+                console.log("inputElementValue : "+ inputElementValue);
+              
+                if (document.getElementById("jsonOntologyList").options.namedItem(inputElementValue) != null) { 
+                  ontologyId = document.getElementById("jsonOntologyList").options.namedItem(inputElementValue).id; //get the _Id of selected item. We use the value to fild it's id
+                  document.getElementById("selectedOntologyId").value = ontologyId; //set the ontologyId to the hidden tag 
+                  console.log('ID changed to : ' + document.getElementById("selectedOntologyId").value);            
+                }                 
+              });
+              
+            }
+      </script>      
   </body>
 </html>

@@ -1,4 +1,10 @@
-body {font-family: Arial, Helvetica, sans-serif;}
+body {font-family: Arial, Helvetica, sans-serif; scroll-behavior: smooth}
+
+.wholeBody{
+  background-color: rgb(252, 206, 206);
+  width: 1210px;
+  height: auto;
+}
 
 /* Full-width input fields */
 input[type=text], input[type=password] {
@@ -15,7 +21,6 @@ button {
   background-color: #4CAF50;
   color: white;
   padding: 14px 20px;
-  margin: 8px 0;
   border: none;
   cursor: pointer;
   width: 100%;
@@ -25,11 +30,28 @@ button:hover {
   opacity: 0.8;
 }
 
+#annotatorButton {
+  position: relative;
+  bottom: -20px;
+}
+
+.selectOntologies{
+  width: 350px;
+  padding: 5px 5px 5px 5px;
+}
+
 .loginButton{
     position: absolute;
-    top: -8px;
+    top: 0px;
     right: 0px;
     height: 50px; 
+}
+
+.saveSessionButtonDiv{
+  position: relative;
+  bottom: -6px;
+  right: 0px;
+  height: 50px; 
 }
 
 input[disabled]{
@@ -41,7 +63,6 @@ input[disabled]{
     background-color: #4CAF50;
     color: white;
     padding: 14px 20px;
-    margin: 20px 0;
     margin-right: 100px;
     border: none;
     cursor: pointer;
@@ -159,7 +180,7 @@ span.psw {
     padding: 0px;
     margin: 0px;
     position: relative;
-    top: 0px;
+    top: -8px;
     left: 0px;
 }
 
@@ -172,6 +193,7 @@ span.psw {
 .labels{
     font-size: 14px;
     color: dimgray;
+    margin-bottom: 5px;
 }
 
 .leftsideBody{
@@ -179,15 +201,25 @@ span.psw {
     float: left;
     display: flex;
     flex-direction: column;
+    height: 510px;
+    max-height: 510px;
+    position: relative;
+    top: -8px;
+    width: 484px;
 }
 
 .rightsideBody{
-    width: 59%;
+    width: 60%;
     height: 562px;
     float: right;
     border-left: solid 1px #a8a8a8; 
     padding: 5px 0 0 5px; 
-    margin-left: 5px
+    width: 720px;
+    height: 505px;
+    max-height: 505px;
+    position: relative;
+    right: -16px;
+    top: -8px;
 }
 
 .typeAreaDiv{
@@ -198,8 +230,7 @@ span.psw {
 
 .textTypeArea{
     border-radius: 2px;
-    height: 300px;
-    margin-top: 8px;
+    height: 325px;
 }
 
 .ontologiesDiv{
@@ -212,5 +243,7 @@ span.psw {
     border: solid 1px black;
     border-radius: 10px;
     padding: 30px;
+    position: relative;
+    right: 0px;
 }
 
