@@ -10,8 +10,11 @@ var express = require('express'), //require Node.express
   bodyParser = require('body-parser'); //requires body-parser
 
 var path = require('path'); //requires path
+var compression = require('compression'); //requires compression
 
 app.use(express.static(path.join(__dirname + "/view"))); //use the 'view' directory
+
+app.use(compression()); //Compress all routes
 
 //getting the document object
 var jsdom = require("jsdom");

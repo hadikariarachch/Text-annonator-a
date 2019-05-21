@@ -86,7 +86,7 @@ function prepareOutputData(dataObject, searchResultDataArray){
 
     let combinedKeyName = (keyword.toLowerCase() + ontology.toUpperCase()); //creating a combined name for the ease of reading back data
     combinedKeyName = combinedKeyName.replace(/\s+/g, '_'); //replacing middle spaces with "_" to be more clear.
-    console.log("COMBINED PRIMARY KEY : "+ combinedKeyName);
+    //console.log("COMBINED PRIMARY KEY : "+ combinedKeyName);
     
     var myObject = dataObject; //create empty object to pass values
     myObject[combinedKeyName] = {keyword: keyword, description: description, resourceUrl: resourceUrl, ontology: ontology}; //passing values to empty object
@@ -111,7 +111,7 @@ function saveToJsonFile(preparedDataObject, callback){
 };
 
 
-//creating an exported getOntologyList() function to respond GUI calls
+//creating an exported getOntologyList() function to respond GUI callsCOMBINED PRIMARY KEY
 exports.getOntologyList = function (req, res) {
 
     //call dictionary.getAllOntologiesFromOntologyList() with a callback function to get the list of all ontologies.
